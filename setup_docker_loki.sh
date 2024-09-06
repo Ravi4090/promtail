@@ -29,7 +29,7 @@ sudo tee "$DAEMON_JSON" > /dev/null <<EOL
     "debug": true,
     "log-driver": "loki",
     "log-opts": {
-        "loki-url": "$LOKI_URL/loki/api/v1/push",
+        "loki-url": "$LOKI_URL",
         "loki-batch-size": "400"
     }
 }
