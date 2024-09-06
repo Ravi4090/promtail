@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Author: Ravi Shankar Rajupalepu
+# Date: 2024-09-06
+# This script installs the Loki Docker plugin, updates Docker's log driver to Loki,
+# and restarts Docker while preserving the state of running containers.
+
 # Path to your .env file
 ENV_FILE=".env"
 
