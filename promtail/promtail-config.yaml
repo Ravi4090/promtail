@@ -6,7 +6,7 @@ positions:
   filename: /tmp/positions.yaml  # Keeps track of log positions to avoid re-sending logs
 
 clients:
-  - url: http://54.82.112.96:3100/loki/api/v1/push  # Your Loki server URL
+  - url: ${LOKI_URL}  # Your Loki server URL
 
 scrape_configs:
   # Scrape system logs from /var/log/ directory
