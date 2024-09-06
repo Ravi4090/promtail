@@ -1,0 +1,42 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml  # Keeps track of log positions to avoid re-sending logs
+
+clients:
+  - url: http://54.82.112.96:3100/loki/api/v1/push  # Your Loki server URL
+
+scrape_configs:
+  # Scrape system logs from /var/log/ directory
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*log  # Logs from /var/log/
+
+  # Scrape syslog input (received on port 514)
+  - job_name: syslog
+    syslog:
+      listen_address: 0.0.0.0:514  # Syslog receiver on port 514
+      idle_timeout: 60s
+      label_structured_data: false
+      labels:
+        job: syslog  # Label the logs as syslog
+    relabel_configs:
+      - source_labels: ['__syslog_message_hostname']
+        target_label: 'host'  # Label the source host of the syslog message
+
+  # Scrape Docker container logs
+  - job_name: docker-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: docker
+          __path__: /var/lib/docker/containers/*/*.log  # Path to Docker container logs
+    pipeline_stages:
+      - docker: {}  # Parses Docker metadata such as container name and ID
