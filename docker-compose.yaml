@@ -11,10 +11,16 @@ services:
     command: -config.file=/etc/promtail/promtail-config.yaml
     networks:
       - monitoring
+  
   cadvisor:
     image: gcr.io/cadvisor/cadvisor-amd64:v0.50.0
     platform: linux/amd64
-    hostname: cadvisor
+    container_name: cadvisor
+    hostname: ${SERVER_NAME}-${ENVIRONMENT}-cadvisor
+    labels:
+      - "server=${SERVER_NAME}"
+      - "environment=${ENVIRONMENT}"
+      - "service=cadvisor"
     volumes:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:ro"
@@ -29,6 +35,11 @@ services:
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
+    hostname: ${SERVER_NAME}-${ENVIRONMENT}-node-exporter
+    labels:
+      - "server=${SERVER_NAME}"
+      - "environment=${ENVIRONMENT}"
+      - "service=node-exporter"
     ports:
       - "9100:9100"
     networks:
